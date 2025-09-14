@@ -61,6 +61,13 @@ h6 {
   padding: 2rem;
 }
 
+.weather-info {
+  border: 1px solid var(--accent);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  text-align: center;
+}
+
 .temperature {
   color: var(--text-primary);
   font-size: 4rem;

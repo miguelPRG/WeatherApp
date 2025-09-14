@@ -6,8 +6,8 @@ interface Coordinates {
 }
 
 function Graphics() {
-  const [weather, setWeather] = useState(null);
-  const [location, setLocation] = useState("");
+  const [weather, setWeather] = useState<any>(null);
+  const [location, setLocation] = useState<string | null>(null);
   const [coordinates, setCoordinates] = useState<Coordinates>({
     latitude: null,
     longitude: null,
@@ -26,8 +26,7 @@ function Graphics() {
         setError(null);
       })
       .catch(() => {
-        setLocation("Não foi possível obter a localização pelo IP.");
-        setError("Erro ao obter localização.");
+        setError("Error obtaining location.");
       });
   }, []);
 
@@ -35,7 +34,24 @@ function Graphics() {
     if (!coordinates.latitude || !coordinates.longitude) {
       return;
     }
-    fetch(`http://localhost:8000/weather?location=${coordinates.latitude},${coordinates.longitude}`)
+
+    const cachedWeather = localStorage.getItem("weather");
+    if (cachedWeather) {
+      setWeather(JSON.parse(cachedWeather));
+    } else {
+      fetchWeather(coordinates);
+    }
+  }, [coordinates]);
+
+  async function fetchWeather(coord: Coordinates | null = null, search: string | null = null) {
+    if (!coord && !search) {
+      setError("No coordinates or search term provided.");
+      return;
+    }
+
+    const locationParam = coord ? `${coord.latitude},${coord.longitude}` : search;
+
+    fetch(`http://localhost:8000/weather?location=${locationParam}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.error) {
@@ -44,25 +60,52 @@ function Graphics() {
         } else {
           setWeather(data);
           setError(null);
+          localStorage.setItem("weather", JSON.stringify(data));
         }
       })
       .catch(() => {
         setWeather(null);
         setError("Failed to fetch weather data.");
       });
-  }, [coordinates]);
+  }
 
   return (
-    <div className="p-4 rounded-lg shadow-md ">
-      <h2>Weather in {location}</h2>
+    <div className="p-10 rounded-lg shadow-md ">
+      <h2 className="mb-10">{location}</h2>
       {error && (
         <div className="text-red-500 font-semibold mt-55 text-center text-4xl">{error}</div>
       )}
-      {weather ? (
-        <pre>{JSON.stringify(weather, null, 2)}</pre>
-      ) : !error ? (
-        <div className="animate-spin rounded-full h-20 w-20 border-b-2 border-blue-400 m-auto mt-55 "></div>
-      ) : null}
+      <div className="weather-card">
+        <h3 className="mb-10">Weather information of the last 5 days</h3>
+        {weather && (
+          <div className="grid grid-cols-3 gap-5 ">
+            <div className="weather-info">
+              <h3>Real Temperature</h3>
+              <p>{weather.temperature} °C</p>
+            </div>
+            <div className="weather-info">
+              <h3>Humidity</h3>
+              <p>{weather.humidity} %</p>
+            </div>
+            <div className="weather-info">
+              <h3>Precipitation Probability</h3>
+              <p>{weather.precipitationProbability} %</p>
+            </div>
+            <div className="weather-info">
+              <h3>Wind Speed</h3>
+              <p>{weather.windSpeed} km/h</p>
+            </div>
+            <div className="weather-info">
+              <h3>UV Index</h3>
+              <p>{weather.uvIndex}</p>
+            </div>
+            <div className="weather-info">
+              <h3>Cloud Cover</h3>
+              <p>{weather.cloudCover} %</p>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
