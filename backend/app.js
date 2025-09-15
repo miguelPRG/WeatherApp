@@ -15,7 +15,7 @@ app.get('/weather', async (req, res) => {
   if (!location) {
     return res.status(400).json({ error: "Parâmetro 'location' é obrigatório." });
   }
-  const url = `https://api.tomorrow.io/v4/weather/forecast?location=${location}&apikey=${apiKey}`;
+  const url = `https://api.tomorrow.io/v4/weather/forecast?timesteps=1d&location=${location}&apikey=${apiKey}`;
   try {
     const response = await fetch(url);
     const data = await response.json();

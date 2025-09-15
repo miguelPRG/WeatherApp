@@ -9,8 +9,8 @@
   --accent-hover: #0a81b8;
   --success: #22c55e;
   --error: #ef4444;
-  --temperature-cold: #3B82F6;
-  --temperature-hot: #F97316;
+  --temperature-cold: #3b82f6;
+  --temperature-hot: #f97316;
 
   font-family: "Inter", sans-serif;
 }
@@ -32,15 +32,15 @@ h6 {
 }
 
 h1 {
-  font-size: 2.30rem; /* 36px */
+  font-size: 2.3rem; /* 36px */
 }
 
 h2 {
-  font-size: 1.80rem; /* 30px */
+  font-size: 1.8rem; /* 30px */
 }
 
 h3 {
-  font-size: 1.50rem; /* 24px */
+  font-size: 1.5rem; /* 24px */
 }
 
 h4 {
@@ -64,8 +64,9 @@ h6 {
 .weather-info {
   border: 1px solid var(--accent);
   border-radius: 0.75rem;
-  padding: 1.5rem;
-  text-align: center;
+  padding: 2rem;
+  text-align: left;
+  height: 350px;
 }
 
 .temperature {
