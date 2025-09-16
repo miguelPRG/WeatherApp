@@ -69,6 +69,10 @@ h6 {
   height: 350px;
 }
 
+.weather-info h3 {
+  margin-bottom: 1rem;
+}
+
 .temperature {
   color: var(--text-primary);
   font-size: 4rem;

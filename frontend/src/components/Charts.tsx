@@ -9,97 +9,43 @@ import {
   Line,
   BarChart,
   Bar,
-  Pie,
-  PieChart,
-  Sector,
-  SectorProps,
 } from "recharts";
 
-export function LineChartComponent({ data }: { data: any[] }) {
+type ChartProps = {
+  data: any[];
+  YUnits?: (value: any) => string;
+};
+
+export function LineChartComponent({ data, YUnits }: ChartProps) {
   return (
-    <ResponsiveContainer width="100%" height="100%">
-      <LineChart
-        data={data}
-        margin={{
-          top: 5,
-          right: 30,
-          left: 20,
-          bottom: 5,
-        }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
+    <ResponsiveContainer width="100%" height={260}>
+      <LineChart data={data}>
+        <CartesianGrid strokeDasharray="5 5" />
         <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Line
-          type="monotone"
-          dataKey="temperatureMin"
-          stroke="#8884d8"
-          activeDot={{ r: 8 }}
-        />
-        <Line type="monotone" dataKey="temperatureMax" stroke="#82ca9d" />
-        <Line type="monotone" dataKey="temperatureAvg" stroke="#ffc658" />
+        <YAxis tickFormatter={YUnits} />
+        <Tooltip viewBox={{ background: "var(--bg-card)" }} />
+        <Legend align="center" />
+        <Line type="monotone" dataKey="Min" stroke="#8884d8" />
+        <Line type="monotone" dataKey="Avg" stroke="#ffc658" />
+        <Line type="monotone" dataKey="Max" stroke="#82ca9d" />
       </LineChart>
     </ResponsiveContainer>
   );
 }
 
-export function BarChartComponent({ data }: { data: any[] }) {
+export function BarChartComponent({ data, YUnits }: ChartProps) {
   return (
-    <ResponsiveContainer width="100%" height="100%">
-      <BarChart
-        width={500}
-        height={300}
-        data={data}
-        margin={{
-          top: 5,
-          right: 30,
-          left: 20,
-          bottom: 5,
-        }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
+    <ResponsiveContainer width="100%" height={260}>
+      <BarChart data={data}>
+        <CartesianGrid strokeDasharray="5 5" />
         <XAxis dataKey="name" />
-        <YAxis />
+        <YAxis tickFormatter={YUnits} />
         <Tooltip />
         <Legend />
-        <Bar dataKey="pv" fill="#8884d8" />
-        <Bar dataKey="uv" fill="#82ca9d" />
+        <Bar dataKey="Min" fill="#8884d8" />
+        <Bar dataKey="Avg" fill="#82ca9d" />
+        <Bar dataKey="Max" fill="#ffc658" />
       </BarChart>
-    </ResponsiveContainer>
-  );
-}
-
-export function PieChartComponent({ data }: { data: any[] }) {
-  return (
-    <ResponsiveContainer width="100%" height="100%">
-      <PieChart width={400} height={400}>
-        <Pie
-          data={data}
-          cx="50%"
-          cy="50%"
-          labelLine={false}
-          label={({ name, percent }) =>
-            `${name}: ${(percent * 100).toFixed(0)}%`
-          }
-          outerRadius={80}
-          fill="#8884d8"
-          dataKey="value"
-        >
-          {data.map((entry, index) => (
-            <Sector
-              key={`sector-${index}`}
-              cx="50%"
-              cy="50%"
-              innerRadius={40}
-              outerRadius={80}
-              fill={entry.fill}
-            />
-          ))}
-        </Pie>
-        <Tooltip />
-      </PieChart>
     </ResponsiveContainer>
   );
 }

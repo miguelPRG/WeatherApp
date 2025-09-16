@@ -1,8 +1,7 @@
-import { useLayoutEffect, useState, useEffect, use } from "react";
+import { useLayoutEffect, useState, useEffect } from "react";
 import {
   LineChartComponent,
   BarChartComponent,
-  PieChartComponent,
 } from "./Charts";
 
 interface Coordinates {
@@ -26,8 +25,10 @@ function Graphics() {
     if (cachedWeather && location) {
       setWeather(JSON.parse(cachedWeather));
       setLocation(location);
+      console.log("Using cached weather data.");
       return;
     } else {
+      console.log("No cached data found, fetching new data.");
       fetch("http://ip-api.com/json/")
         .then((res) => res.json())
         .then((data) => {
@@ -46,6 +47,9 @@ function Graphics() {
 
   useEffect(() => {
     if (coordinates.latitude && coordinates.longitude) {
+      console.log("Fetching weather data...");
+      localStorage.setItem("location", location || "");
+      localStorage.setItem("weather", weather); // Clear old weather data
       fetchWeather(coordinates);
     }
   }, [coordinates]);
@@ -92,24 +96,32 @@ function Graphics() {
       <div className="weather-card">
         <h3 className="mb-10">Weather information of the next 5 days</h3>
         {weather && (
-          <div className="grid grid-cols-2 gap-x-5 gap-y-8 items-stretch">
+          <div className="grid grid-cols-2 gap-x-5 gap-y-5">
             <div className="weather-info">
-              <h3 className="mb-5">Real Temperature</h3>
+              <h3>Real Temperature</h3>
               <LineChartComponent
-                data={weather.map((day) => ({
+                data={weather.map((day:any) => ({
                   name: new Date(day.time).toLocaleDateString(),
-                  temperatureMin: day.values.temperatureMin,
-                  temperatureMax: day.values.temperatureMax,
-                  temperatureAvg: day.values.temperatureAvg,
+                  Min: day.values.temperatureMin,
+                  Avg: day.values.temperatureAvg,
+                  Max: day.values.temperatureMax,
                 }))}
+                YUnits={(value: number) => `${value}°C`}
               />
             </div>
             <div className="weather-info">
               <h3>Humidity</h3>
-              {/*Gráfico*/}
+              <BarChartComponent
+                data={weather.map((day: any) => ({
+                  name: new Date(day.time).toLocaleDateString(),
+                  Min: day.values.humidityMin,
+                  Avg: day.values.humidityAvg,
+                  Max: day.values.humidityMax,
+                }))}
+              />
             </div>
             <div className="weather-info">
-              <h3>Precipitation Probability</h3>
+              <h3>Evapotranspiration Level</h3>
               {/*Gráfico*/}
             </div>
             <div className="weather-info">
@@ -117,11 +129,11 @@ function Graphics() {
               {/*Gráfico*/}
             </div>
             <div className="weather-info">
-              <h3>UV Index</h3>
+              <h3>Cloud Cover</h3>
               {/*Gráfico*/}
             </div>
-            <div className="weather-info">
-              <h3>Cloud Cover</h3>
+             <div className="weather-info">
+              <h3>UV Index</h3>
               {/*Gráfico*/}
             </div>
           </div>
