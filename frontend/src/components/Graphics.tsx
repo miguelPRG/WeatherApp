@@ -1,8 +1,5 @@
 import { useLayoutEffect, useState, useEffect } from "react";
-import {
-  LineChartComponent,
-  BarChartComponent,
-} from "./Charts";
+import * as Chart from './Charts';
 
 interface Coordinates {
   latitude: number | null;
@@ -99,7 +96,7 @@ function Graphics() {
           <div className="grid grid-cols-2 gap-x-5 gap-y-5">
             <div className="weather-info">
               <h3>Real Temperature</h3>
-              <LineChartComponent
+              <Chart.LineChartComponent
                 data={weather.map((day:any) => ({
                   name: new Date(day.time).toLocaleDateString(),
                   Min: day.values.temperatureMin,
@@ -111,26 +108,52 @@ function Graphics() {
             </div>
             <div className="weather-info">
               <h3>Humidity</h3>
-              <BarChartComponent
+              <Chart.BarChartComponent
                 data={weather.map((day: any) => ({
                   name: new Date(day.time).toLocaleDateString(),
                   Min: day.values.humidityMin,
                   Avg: day.values.humidityAvg,
                   Max: day.values.humidityMax,
                 }))}
+                YUnits={(value: number) => `${value}%`}
               />
             </div>
             <div className="weather-info">
-              <h3>Evapotranspiration Level</h3>
-              {/*Gráfico*/}
-            </div>
-            <div className="weather-info">
-              <h3>Wind Speed</h3>
-              {/*Gráfico*/}
+              <h3>Evapotranspiration</h3>
+              <Chart.AreaChartComponent
+                data={weather.map((day: any) => ({
+                  name: new Date(day.time).toLocaleDateString(),
+                  Min: day.values.evapotranspirationMin,
+                  Avg: day.values.evapotranspirationAvg,
+                  Max: day.values.evapotranspirationMax,
+                }))}
+                YUnits={(value: number) => `${value} mm`}
+              />
             </div>
             <div className="weather-info">
               <h3>Cloud Cover</h3>
-              {/*Gráfico*/}
+              <Chart.ComposedChartComponent
+                data={weather.map((day: any) => ({
+                  name: new Date(day.time).toLocaleDateString(),
+                  Min: day.values.cloudCoverMin,
+                  Avg: day.values.cloudCoverAvg,
+                  Max: day.values.cloudCoverMax,
+                }))}
+                YUnits={(value: number) => `${value} %`}
+              />
+            </div>
+            <div className="weather-info">
+              <h3>Wind Speed</h3>
+              <Chart.RadialBarChartComponent
+              data={weather.map((day: any, idx: number) => ({
+                name: new Date(day.time).toLocaleDateString(),
+                Min: day.values.windSpeedMin,
+                Avg: day.values.windSpeedAvg,
+                Max: day.values.windSpeedMax,
+                fill: ["#8884d8", "#83a6ed", "#8dd1e1", "#82ca9d", "#a4de6c", "#d0ed57"][idx % 6],
+              }))}
+              YUnits={(value: number) => `${value} km/h`}
+              />
             </div>
              <div className="weather-info">
               <h3>UV Index</h3>
