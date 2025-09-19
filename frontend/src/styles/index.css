@@ -6,7 +6,7 @@
   --text-primary: #f1f5f9;
   --text-secondary: #94a3b8;
   --accent: #0ea5e9;
-  --accent-hover: #0a81b8;
+  --accent-hover: #066896;
   --success: #22c55e;
   --error: #ef4444;
   --temperature-cold: #3b82f6;
@@ -86,12 +86,17 @@ h6 {
 }
 
 .chart-btn {
-  @apply px-3 py-1  text-white rounded transition cursor-pointer;
+  @apply px-3 py-1 text-white rounded transition cursor-pointer;
   background-color: var(--accent);
 }
 
 .chart-btn:hover {
   background-color: var(--accent-hover);
+}
+
+.chart-btn.active {
+  background-color: var(--accent-hover);
+  cursor: default;
 }
 
 .temperature {

@@ -1,70 +1,54 @@
 import { useLayoutEffect, useState, useEffect } from "react";
 import * as Chart from './Charts';
 
-interface Coordinates {
-  latitude: number | null;
-  longitude: number | null;
-}
-
 function Graphics() {
   const [weather, setWeather] = useState<any>(null);
   const [location, setLocation] = useState<string | null>(null);
-  const [coordinates, setCoordinates] = useState<Coordinates>({
-    latitude: null,
-    longitude: null,
-  });
   const [error, setError] = useState<string | null>(null);
 
   useLayoutEffect(() => {
-    const cachedWeather = localStorage.getItem("weather");
-    const location = localStorage.getItem("location");
-    
-    if (cachedWeather && location) {
-      setWeather(JSON.parse(cachedWeather));
-      setLocation(location);
-      console.log("Using cached weather data.");
-      return;
-    } else {
-      console.log("No cached data found, fetching new data.");
-      fetch("http://ip-api.com/json/")
-        .then((res) => res.json())
-        .then((data) => {
-          setLocation(`${data.city}, ${data.country}`);
-          setCoordinates({
-            latitude: data.lat,
-            longitude: data.lon,
-          });
-          setError(null);
-        })
-        .catch(() => {
-          setError("Error obtaining location.");
-        });
-    }
+    // Sempre buscar localização atual pelo IP
+    fetch("http://ip-api.com/json/")
+      .then((res) => res.json())
+      .then((data) => {
+        const currentLocation = `${data.city}, ${data.regionName}, ${data.country}`;
+        const cachedLocation = localStorage.getItem("location");
+        const cachedWeather = JSON.parse(localStorage.getItem("weather") || "null");
+
+        // Se localização mudou ou não há cache, buscar novos dados
+        if (currentLocation !== cachedLocation || !cachedWeather) {
+          setLocation(currentLocation);
+          localStorage.setItem("location", currentLocation);
+          localStorage.removeItem("weather"); // Limpa cache antigo
+          console.log("Fetching new weather data.");
+        } else {
+          // Se localização igual e há cache, verifica validade do cache
+          const today = new Date();
+          const firstDay = new Date(cachedWeather[0].time);
+          firstDay.setHours(0, 0, 0, 0);
+          today.setHours(0, 0, 0, 0);
+          if (firstDay.getTime() !== today.getTime()) {
+            localStorage.removeItem("weather");
+          }
+          setWeather(cachedWeather);
+          setLocation(cachedLocation);
+          console.log("Using cached weather data.");
+        }
+      })
+      .catch(() => {
+        setError("Error obtaining location.");
+      });
   }, []);
 
   useEffect(() => {
-    if (coordinates.latitude && coordinates.longitude) {
-      console.log("Fetching weather data...");
-      localStorage.setItem("location", location || "");
-      localStorage.setItem("weather", weather); // Clear old weather data
-      fetchWeather(coordinates);
+    if (location && !weather) {
+      fetchWeather(location);
     }
-  }, [coordinates]);
+  }, [location]);
 
-  async function fetchWeather(
-    coord: Coordinates | null = null,
-    search: string | null = null,
-  ) {
-    if (!coord && !search) {
-      setError("No coordinates or search term provided.");
-      return;
-    }
+  async function fetchWeather(search: string) {
 
-    const locationParam = coord
-      ? `${coord.latitude},${coord.longitude}`
-      : search;
-
-    fetch(`http://localhost:8000/weather?location=${locationParam}`)
+    fetch(`http://localhost:8000/weather?location=${search}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.error) {
@@ -73,7 +57,8 @@ function Graphics() {
         } else {
           setWeather(data.timelines.daily);
           setError(null);
-          localStorage.setItem("weather", JSON.stringify(data.timelines.daily)); // Corrigido!
+          localStorage.setItem("weather", JSON.stringify(data.timelines.daily)); // Sempre string
+          localStorage.setItem("location", search); // Isso salva como [object Object]
         }
       })
       .catch(() => {
