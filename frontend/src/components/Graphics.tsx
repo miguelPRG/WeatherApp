@@ -141,7 +141,7 @@ function Graphics() {
               />
             </div>
              <div className="weather-info">
-              <h3>UV Index</h3>
+              <h3>Precipitation Probability</h3>
               {/*Gráfico*/}
             </div>
           </div>
