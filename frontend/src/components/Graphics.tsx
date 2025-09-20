@@ -75,10 +75,10 @@ function Graphics() {
           {error}
         </div>
       )}
-      <div className="weather-card">
+      <div className="weather-card max-w-6xl mx-auto">
         <h3 className="mb-10">Weather information of the next 5 days</h3>
         {weather && (
-          <div className="grid grid-cols-2 gap-x-5 gap-y-5">
+          <div className="grid lg:grid-cols-2 gap-x-5 gap-y-5 grid-cols-1 ">
             <div className="weather-info">
               <h3>Real Temperature</h3>
               <Chart.LineChartComponent
@@ -141,8 +141,16 @@ function Graphics() {
               />
             </div>
              <div className="weather-info">
-              <h3>Precipitation Probability</h3>
-              {/*Gráfico*/}
+              <h3>UV Radiation</h3>
+              <Chart.ScatterChartComponent
+                data={weather.map((day: any) => ({
+                  name: new Date(day.time).toLocaleDateString(),
+                  Min: day.values?.uvIndexMin ? day.values.uvIndexMin : 0,
+                  Avg: day.values?.uvIndexAvg ? day.values.uvIndexAvg : 0,
+                  Max: day.values?.uvIndexMax ? day.values.uvIndexMax : 0,
+                }))}
+                YUnits={(value: number) => `${value}`}
+              />
             </div>
           </div>
         )}

@@ -26,9 +26,9 @@ function Footer() {
 
   return (
     <footer
-      className={`w-full p-5 bg-blue-500 text-white text-center h-5 fixed bottom-0 flex flex-col justify-center ${
-        showFooter ? "footer-fade-in opacity-100" : "opacity-0 pointer-events-none"
-      }`}
+      className={`w-full p-5 bg-blue-500 text-white text-center h-5 fixed bottom-0 flex flex-col justify-center
+        ${showFooter ? "footer-fade-in opacity-100" : "footer-fade-out opacity-0 pointer-events-none"}
+      `}
     >
       <p className="text-md">
         &copy; {getCurrentDate()} Weather App. All rights reserved to
