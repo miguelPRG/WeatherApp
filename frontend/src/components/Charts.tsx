@@ -12,8 +12,11 @@ import {
   AreaChart,
   Area,
   ComposedChart,
-  RadialBar,
-  RadialBarChart,
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
   ScatterChart,
   Scatter,
 } from "recharts";
@@ -25,17 +28,49 @@ type ChartProps = {
   YUnits?: (value: any) => string;
 };
 
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div
+        style={{
+          backgroundColor: "#fff",
+          border: "1px solid #ccc",
+          borderRadius: "8px",
+          padding: "10px",
+        }}
+      >
+        <div
+          style={{
+            color: "#000", // só o nome (label) fica colorido
+            fontWeight: 700,
+            fontSize: "1.05rem",
+            marginBottom: "6px",
+          }}
+        >
+          {label}
+        </div>
+        {payload.map((entry, idx) => (
+          <div key={idx} style={{ color: entry.color }}>
+            {entry.name}: {entry.value}
+          </div>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
+
 function LineChartComponent({ data, YUnits }: ChartProps) {
   return (
-    <ResponsiveContainer width="100%" height="100%" minWidth={160} >
-      <LineChart
-        data={data}
-      
-      >
+    <ResponsiveContainer width="100%" height="100%" minWidth={150}>
+      <LineChart data={data}>
         <CartesianGrid strokeDasharray="5 5" />
-        <XAxis dataKey="name" />
+        <XAxis dataKey="day" />
         <YAxis tickFormatter={YUnits} />
-        <Legend align="center" />
+        <Tooltip content={<CustomTooltip />} />
+        <div>
+          <Legend align="center" verticalAlign="bottom" />
+        </div>
         <Line type="monotone" dataKey="Avg" stroke="#ffc658" />
         <Line type="monotone" dataKey="Max" stroke="#82ca9d" />
         <Line type="monotone" dataKey="Min" stroke="#8884d8" />
@@ -45,13 +80,15 @@ function LineChartComponent({ data, YUnits }: ChartProps) {
 }
 function BarChartComponent({ data, YUnits }: ChartProps) {
   return (
-    <ResponsiveContainer width="100%" height="100%" minWidth={160}>
+    <ResponsiveContainer width="100%" height="100%" minWidth={150}>
       <BarChart data={data}>
         <CartesianGrid strokeDasharray="5 5" />
-        <XAxis dataKey="name" />
+        <XAxis dataKey="day" />
         <YAxis tickFormatter={YUnits} />
-        <Tooltip />
-        <Legend align="center" />
+        <Tooltip content={<CustomTooltip />} />
+        <div>
+          <Legend align="center" verticalAlign="bottom" />
+        </div>
         <Bar dataKey="Avg" fill="#ffc658" />
         <Bar dataKey="Max" fill="#82ca9d" />
         <Bar dataKey="Min" fill="#8884d8" />
@@ -62,13 +99,15 @@ function BarChartComponent({ data, YUnits }: ChartProps) {
 
 function AreaChartComponent({ data, YUnits }: ChartProps) {
   return (
-    <ResponsiveContainer width="100%" height="100%" minWidth={160}>
+    <ResponsiveContainer width="100%" height="100%" minWidth={150}>
       <AreaChart data={data}>
         <CartesianGrid strokeDasharray="5 5" />
-        <XAxis dataKey="name" scale="band" />
+        <XAxis dataKey="day" scale="band" />
         <YAxis tickFormatter={YUnits} />
-        <Tooltip />
-        <Legend align="center" />
+        <Tooltip content={<CustomTooltip />} />
+        <div>
+          <Legend align="center" verticalAlign="bottom" />
+        </div>
         <Area
           type="monotone"
           dataKey="Avg"
@@ -97,13 +136,15 @@ function AreaChartComponent({ data, YUnits }: ChartProps) {
 
 function ComposedChartComponent({ data, YUnits }: ChartProps) {
   return (
-    <ResponsiveContainer width="100%" height="100%" minWidth={160}>
+    <ResponsiveContainer width="100%" height="100%" minWidth={150}>
       <ComposedChart data={data}>
         <CartesianGrid stroke="#f5f5f5" />
-        <XAxis dataKey="name" scale="band" />
+        <XAxis dataKey="day" scale="band" />
         <YAxis tickFormatter={YUnits} />
-        <Tooltip />
-        <Legend />
+        <Tooltip content={<CustomTooltip />} />
+        <div>
+          <Legend align="center" verticalAlign="bottom" />
+        </div>
         <Bar dataKey="Avg" barSize={20} fill="#ffc658" />
         <Line type="monotone" dataKey="Avg" stroke="#ffc658" />
         <Bar dataKey="Max" barSize={20} fill="#82ca9d" />
@@ -115,61 +156,21 @@ function ComposedChartComponent({ data, YUnits }: ChartProps) {
   );
 }
 
-function RadialBarChartComponent({ data, YUnits }: ChartProps) {
-  // State to manage the selected metric (Min, Avg, Max)
-  const [metric, setMetric] = useState<"Max" | "Min" | "Avg">("Avg");
-  // Style for calculating the current screen width
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 640);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-
-  const style = {
-    top: 50,
-    right: 10
-  };
-
-  return (
-    <>
-      <div className="flex gap-2 mb-5 flex-col sm:flex-row">
-        <button
-          className={`chart-btn${metric === "Min" ? " active" : ""}`}
-          onClick={() => setMetric("Min")}
-        >
-          Min
-        </button>
-        <button
-          className={`chart-btn${metric === "Avg" ? " active" : ""}`}
-          onClick={() => setMetric("Avg")}
-        >
-          Avg
-        </button>
-        <button
-          className={`chart-btn${metric === "Max" ? " active" : ""}`}
-          onClick={() => setMetric("Max")}
-        >
-          Max
-        </button>
-      </div>
-      <ResponsiveContainer width="100%" height="100%" minWidth={160}>
-        <RadialBarChart cx="50%" cy="50%" innerRadius="10%" outerRadius="80%" barSize={10} data={data}>
-          <RadialBar
-            minAngle={15}
-            label={{ position: 'insideStart', fill: '#fff' }}
-            background
-            clockWise
-            dataKey={metric}
-          />
-          <Legend iconSize={5} layout="vertical" verticalAlign="middle" wrapperStyle={style} />
-        </RadialBarChart>
+function SimpleRadarChartComponent({ data }: ChartProps) {
+   return (
+      <ResponsiveContainer width="100%" height="100%" minWidth={150}>
+        <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
+          <PolarGrid />
+          <PolarAngleAxis dataKey="day" />
+          <PolarRadiusAxis />
+          <Tooltip content={<CustomTooltip />} />
+          <Radar name="Speed" dataKey="Avg" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
+          <div>
+            <Legend align="center" verticalAlign="bottom" />  
+          </div>
+        </RadarChart>
       </ResponsiveContainer>
-    </>
-  );
+    );
 }
 
 function ScatterChartComponent({ data, YUnits }: ChartProps) {
@@ -183,29 +184,24 @@ function ScatterChartComponent({ data, YUnits }: ChartProps) {
   }, []);
 
   return (
-    <ResponsiveContainer width="100%" height="100%" minWidth={170}>
-      <ScatterChart
-        margin={{
-          top: 20,
-          right: isMobile ? 10 : 30,
-          left: isMobile ? 0 : 20,
-          bottom: isMobile ? 40 : 30, // mais espaço para os labels
-        }}
-      >
+    <ResponsiveContainer width="100%" height="100%" minWidth={150}>
+      <ScatterChart>
         <CartesianGrid />
         <XAxis
-          dataKey="name"
+          dataKey="day"
           type="category"
           allowDuplicatedCategory={false}
           interval={0}
-          angle={isMobile ? -35 : 0}
+          angle={isMobile ? -60 : 25}
           textAnchor={isMobile ? "end" : "middle"}
-          dy={isMobile ? 20 : 10}
+          dy={isMobile ? 0 : 10}
           height={isMobile ? 50 : 30}
         />
         <YAxis type="number" tickFormatter={YUnits} />
-        <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-        <Legend wrapperStyle={{ position: 'absolute', bottom: -20 }} />
+        <Tooltip />
+        <div className="mb-10">
+          <Legend wrapperStyle={{ position: 'absolute', bottom: -20 }} />
+        </div>
         <Scatter name="Min" data={data} fill="#8884d8" dataKey="Min" />
         <Scatter name="Avg" data={data} fill="#ffc658" dataKey="Avg" />
         <Scatter name="Max" data={data} fill="#82ca9d" dataKey="Max" />
@@ -219,6 +215,6 @@ export {
   BarChartComponent,
   AreaChartComponent,
   ComposedChartComponent,
-  RadialBarChartComponent,
+  SimpleRadarChartComponent,
   ScatterChartComponent,
 };

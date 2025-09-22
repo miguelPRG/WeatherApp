@@ -75,7 +75,7 @@ function Graphics() {
           {error}
         </div>
       )}
-      <div className="weather-card max-w-6xl mx-auto">
+      <div className="weather-card max-w-6xl mx-auto min-w-xm">
         <h3 className="mb-10">Weather information of the next 5 days</h3>
         {weather && (
           <div className="grid lg:grid-cols-2 gap-x-5 gap-y-5 grid-cols-1 ">
@@ -83,7 +83,7 @@ function Graphics() {
               <h3>Real Temperature</h3>
               <Chart.LineChartComponent
                 data={weather.map((day:any) => ({
-                  name: new Date(day.time).toLocaleDateString(),
+                  day: new Date(day.time).getDate(),
                   Min: day.values.temperatureMin,
                   Avg: day.values.temperatureAvg,
                   Max: day.values.temperatureMax,
@@ -95,7 +95,7 @@ function Graphics() {
               <h3>Humidity</h3>
               <Chart.BarChartComponent
                 data={weather.map((day: any) => ({
-                  name: new Date(day.time).toLocaleDateString(),
+                  day: new Date(day.time).getDate(),
                   Min: day.values.humidityMin,
                   Avg: day.values.humidityAvg,
                   Max: day.values.humidityMax,
@@ -107,7 +107,7 @@ function Graphics() {
               <h3 className="break-all">Evapotranspiration</h3>
               <Chart.AreaChartComponent
                 data={weather.map((day: any) => ({
-                  name: new Date(day.time).toLocaleDateString(),
+                  day: new Date(day.time).getDate(),
                   Min: day.values.evapotranspirationMin,
                   Avg: day.values.evapotranspirationAvg,
                   Max: day.values.evapotranspirationMax,
@@ -119,7 +119,7 @@ function Graphics() {
               <h3>Cloud Cover</h3>
               <Chart.ComposedChartComponent
                 data={weather.map((day: any) => ({
-                  name: new Date(day.time).toLocaleDateString(),
+                  day: new Date(day.time).getDate(), // Apenas o dia do mês
                   Min: day.values.cloudCoverMin,
                   Avg: day.values.cloudCoverAvg,
                   Max: day.values.cloudCoverMax,
@@ -128,23 +128,20 @@ function Graphics() {
               />
             </div>
             <div className="weather-info">
-              <h3>Wind Speed</h3>
-              <Chart.RadialBarChartComponent
-              data={weather.map((day: any, idx: number) => ({
-                name: new Date(day.time).toLocaleDateString(),
-                Min: day.values.windSpeedMin,
-                Avg: day.values.windSpeedAvg,
-                Max: day.values.windSpeedMax,
-                fill: ["#8884d8", "#83a6ed", "#8dd1e1", "#82ca9d", "#a4de6c", "#d0ed57"][idx % 6],
-              }))}
-              YUnits={(value: number) => `${value} km/h`}
+              <h3>Avarage Wind Speed</h3>
+              <Chart.SimpleRadarChartComponent
+                data={weather.map((day: any) => ({
+                  day: new Date(day.time).getDate(), // Apenas o dia do mês
+                  Avg: day.values.windSpeedAvg,
+                }))}
+                YUnits={(value: number) => `${value} km/h`}
               />
             </div>
              <div className="weather-info">
               <h3>UV Radiation</h3>
               <Chart.ScatterChartComponent
                 data={weather.map((day: any) => ({
-                  name: new Date(day.time).toLocaleDateString(),
+                  day: new Date(day.time).getDate(), // Apenas o dia do mês
                   Min: day.values?.uvIndexMin ? day.values.uvIndexMin : 0,
                   Avg: day.values?.uvIndexAvg ? day.values.uvIndexAvg : 0,
                   Max: day.values?.uvIndexMax ? day.values.uvIndexMax : 0,
