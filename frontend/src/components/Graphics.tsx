@@ -104,7 +104,7 @@ function Graphics() {
               />
             </div>
             <div className="weather-info">
-              <h3>Evapotranspiration</h3>
+              <h3 className="break-all">Evapotranspiration</h3>
               <Chart.AreaChartComponent
                 data={weather.map((day: any) => ({
                   name: new Date(day.time).toLocaleDateString(),

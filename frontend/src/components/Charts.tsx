@@ -26,23 +26,11 @@ type ChartProps = {
 };
 
 function LineChartComponent({ data, YUnits }: ChartProps) {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 640);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
   return (
-    <ResponsiveContainer width="100%" height={isMobile ? 180 : 260} minWidth={100}>
+    <ResponsiveContainer width="100%" height="100%" minWidth={160} >
       <LineChart
         data={data}
-        margin={{
-          top: 20,
-          right: isMobile ? 10 : 30,
-          left: isMobile ? 0 : 20,
-          bottom: 20,
-        }}
+      
       >
         <CartesianGrid strokeDasharray="5 5" />
         <XAxis dataKey="name" />
@@ -57,7 +45,7 @@ function LineChartComponent({ data, YUnits }: ChartProps) {
 }
 function BarChartComponent({ data, YUnits }: ChartProps) {
   return (
-    <ResponsiveContainer width="100%" height="100%" minWidth={100}>
+    <ResponsiveContainer width="100%" height="100%" minWidth={160}>
       <BarChart data={data}>
         <CartesianGrid strokeDasharray="5 5" />
         <XAxis dataKey="name" />
@@ -74,7 +62,7 @@ function BarChartComponent({ data, YUnits }: ChartProps) {
 
 function AreaChartComponent({ data, YUnits }: ChartProps) {
   return (
-    <ResponsiveContainer width="100%" height="100%" minWidth={100}>
+    <ResponsiveContainer width="100%" height="100%" minWidth={160}>
       <AreaChart data={data}>
         <CartesianGrid strokeDasharray="5 5" />
         <XAxis dataKey="name" scale="band" />
@@ -109,7 +97,7 @@ function AreaChartComponent({ data, YUnits }: ChartProps) {
 
 function ComposedChartComponent({ data, YUnits }: ChartProps) {
   return (
-    <ResponsiveContainer width="100%" height="100%" minWidth={100}>
+    <ResponsiveContainer width="100%" height="100%" minWidth={160}>
       <ComposedChart data={data}>
         <CartesianGrid stroke="#f5f5f5" />
         <XAxis dataKey="name" scale="band" />
@@ -128,7 +116,9 @@ function ComposedChartComponent({ data, YUnits }: ChartProps) {
 }
 
 function RadialBarChartComponent({ data, YUnits }: ChartProps) {
+  // State to manage the selected metric (Min, Avg, Max)
   const [metric, setMetric] = useState<"Max" | "Min" | "Avg">("Avg");
+  // Style for calculating the current screen width
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -138,19 +128,15 @@ function RadialBarChartComponent({ data, YUnits }: ChartProps) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const style = isMobile
-    ? { position: "static",  textAlign: "center", width: "100%" ,marginBottom: "-40px"}
-    : {
-        top: "50%",
-        right: 0,
-        transform: "translate(0, -50%)",
-        lineHeight: "24px",
-        marginRight: "-30px",
-      };
+
+  const style = {
+    top: 50,
+    right: 10
+  };
 
   return (
     <>
-      <div className="flex gap-2 mb-3">
+      <div className="flex gap-2 mb-5 flex-col sm:flex-row">
         <button
           className={`chart-btn${metric === "Min" ? " active" : ""}`}
           onClick={() => setMetric("Min")}
@@ -170,30 +156,16 @@ function RadialBarChartComponent({ data, YUnits }: ChartProps) {
           Max
         </button>
       </div>
-      <ResponsiveContainer width="100%" height={240} minWidth={100}>
-        <RadialBarChart
-          innerRadius="10%"
-          outerRadius="80%"
-          barSize={10}
-          data={data}
-        >
+      <ResponsiveContainer width="100%" height="100%" minWidth={160}>
+        <RadialBarChart cx="50%" cy="50%" innerRadius="10%" outerRadius="80%" barSize={10} data={data}>
           <RadialBar
-            minAngle={1}
-            label={{ position: "insideStart", fill: "#fff" }}
+            minAngle={15}
+            label={{ position: 'insideStart', fill: '#fff' }}
             background
             clockWise
             dataKey={metric}
-            isAnimationActive={true}
-            
           />
-          <Tooltip formatter={YUnits} />
-          <Legend
-            iconSize={10}
-            layout={isMobile ? "horizontal" : "vertical"}
-            verticalAlign={isMobile ? "bottom" : "middle"}
-            align={isMobile ? "center" : "right"}
-            wrapperStyle={style}
-          />
+          <Legend iconSize={5} layout="vertical" verticalAlign="middle" wrapperStyle={style} />
         </RadialBarChart>
       </ResponsiveContainer>
     </>
@@ -211,7 +183,7 @@ function ScatterChartComponent({ data, YUnits }: ChartProps) {
   }, []);
 
   return (
-    <ResponsiveContainer width="100%" height={isMobile ? 180 : 260} minWidth={200}>
+    <ResponsiveContainer width="100%" height="100%" minWidth={170}>
       <ScatterChart
         margin={{
           top: 20,
