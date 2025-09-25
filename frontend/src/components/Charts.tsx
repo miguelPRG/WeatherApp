@@ -71,8 +71,8 @@ function LineChartComponent({ data, YUnits }: ChartProps) {
         <div>
           <Legend align="center" verticalAlign="bottom" />
         </div>
-        <Line type="monotone" dataKey="Avg" stroke="#ffc658" />
         <Line type="monotone" dataKey="Max" stroke="#82ca9d" />
+        <Line type="monotone" dataKey="Avg" stroke="#ffc658" />
         <Line type="monotone" dataKey="Min" stroke="#8884d8" />
       </LineChart>
     </ResponsiveContainer>
@@ -89,8 +89,8 @@ function BarChartComponent({ data, YUnits }: ChartProps) {
         <div>
           <Legend align="center" verticalAlign="bottom" />
         </div>
-        <Bar dataKey="Avg" fill="#ffc658" />
         <Bar dataKey="Max" fill="#82ca9d" />
+        <Bar dataKey="Avg" fill="#ffc658" />
         <Bar dataKey="Min" fill="#8884d8" />
       </BarChart>
     </ResponsiveContainer>
@@ -110,16 +110,16 @@ function AreaChartComponent({ data, YUnits }: ChartProps) {
         </div>
         <Area
           type="monotone"
-          dataKey="Avg"
-          stroke="#ffc658"
-          fill="#ffc658"
+          dataKey="Max"
+          stroke="#82ca9d"
+          fill="#82ca9d"
           stackId="1"
         />
         <Area
           type="monotone"
-          dataKey="Max"
-          stroke="#82ca9d"
-          fill="#82ca9d"
+          dataKey="Avg"
+          stroke="#ffc658"
+          fill="#ffc658"
           stackId="1"
         />
         <Area
@@ -145,10 +145,10 @@ function ComposedChartComponent({ data, YUnits }: ChartProps) {
         <div>
           <Legend align="center" verticalAlign="bottom" />
         </div>
-        <Bar dataKey="Avg" barSize={20} fill="#ffc658" />
-        <Line type="monotone" dataKey="Avg" stroke="#ffc658" />
         <Bar dataKey="Max" barSize={20} fill="#82ca9d" />
         <Line type="monotone" dataKey="Max" stroke="#82ca9d" />
+        <Bar dataKey="Avg" barSize={20} fill="#ffc658" />
+        <Line type="monotone" dataKey="Avg" stroke="#ffc658" />
         <Bar dataKey="Min" barSize={20} fill="#8884d8" />
         <Line type="monotone" dataKey="Min" stroke="#8884d8" />
       </ComposedChart>
@@ -202,9 +202,9 @@ function ScatterChartComponent({ data, YUnits }: ChartProps) {
         <div className="mb-10">
           <Legend wrapperStyle={{ position: 'absolute', bottom: -20 }} />
         </div>
-        <Scatter name="Min" data={data} fill="#8884d8" dataKey="Min" />
-        <Scatter name="Avg" data={data} fill="#ffc658" dataKey="Avg" />
         <Scatter name="Max" data={data} fill="#82ca9d" dataKey="Max" />
+        <Scatter name="Avg" data={data} fill="#ffc658" dataKey="Avg" />
+        <Scatter name="Min" data={data} fill="#8884d8" dataKey="Min" />
       </ScatterChart>
     </ResponsiveContainer>
   );

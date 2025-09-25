@@ -1,23 +1,28 @@
+import { useRef } from "react";
+import { useWeather } from "../hooks/WeatherContext";
+
 function Header() {
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const { searchWeather } = useWeather();
+
   return (
-    <>
-      <header className="header text-center p-3 bg-blue-500 text-white">
-        <h1 className="header-title">Weather App</h1>
-        <div className="flex justify-center mt-4">
-          <input
-            className="bg-white text-black rounded p-2 w-100 mr-2"
-            type="text"
-            placeholder="Search for a city..."
-          />
-          <button
-            className="cursor-pointer search-button"
-            onClick={() => alert("Search functionality not implemented yet")}
-          >
-            Search
-          </button>
-        </div>
-      </header>
-    </>
+    <header className="header text-center p-3 bg-blue-500 text-white">
+      <h1 className="header-title">Weather App</h1>
+      <div className="flex justify-center mt-4">
+        <input
+          className="bg-white text-black rounded p-2 w-100 mr-2"
+          type="text"
+          placeholder="Search for a city..."
+          ref={searchInputRef}
+        />
+        <button
+          className="cursor-pointer search-button"
+          onClick={() => searchWeather(searchInputRef.current?.value || "")}
+        >
+          Search
+        </button>
+      </div>
+    </header>
   );
 }
 

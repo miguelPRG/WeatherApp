@@ -1,75 +1,29 @@
-import { useLayoutEffect, useState, useEffect } from "react";
+import { useWeather } from "../hooks/WeatherContext";
 import * as Chart from './Charts';
 
 function Graphics() {
-  const [weather, setWeather] = useState<any>(null);
-  const [location, setLocation] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useLayoutEffect(() => {
-    // Sempre buscar localização atual pelo IP
-    fetch("http://ip-api.com/json/")
-      .then((res) => res.json())
-      .then((data) => {
-        const currentLocation = `${data.city}, ${data.regionName}, ${data.country}`;
-        const cachedLocation = localStorage.getItem("location");
-        const cachedWeather = JSON.parse(localStorage.getItem("weather") || "null");
-
-        // Se localização mudou ou não há cache, buscar novos dados
-        if (currentLocation !== cachedLocation || !cachedWeather) {
-          setLocation(currentLocation);
-          localStorage.setItem("location", currentLocation);
-          localStorage.removeItem("weather"); // Limpa cache antigo
-          console.log("Fetching new weather data.");
-        } else {
-          // Se localização igual e há cache, verifica validade do cache
-          const today = new Date();
-          const firstDay = new Date(cachedWeather[0].time);
-          firstDay.setHours(0, 0, 0, 0);
-          today.setHours(0, 0, 0, 0);
-          if (firstDay.getTime() !== today.getTime()) {
-            localStorage.removeItem("weather");
-          }
-          setWeather(cachedWeather);
-          setLocation(cachedLocation);
-          console.log("Using cached weather data.");
-        }
-      })
-      .catch(() => {
-        setError("Error obtaining location.");
-      });
-  }, []);
-
-  useEffect(() => {
-    if (location && !weather) {
-      fetchWeather(location);
-    }
-  }, [location]);
-
-  async function fetchWeather(search: string) {
-
-    fetch(`http://localhost:8000/weather?location=${search}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error) {
-          setWeather(null);
-          setError(data.error);
-        } else {
-          setWeather(data.timelines.daily);
-          setError(null);
-          localStorage.setItem("weather", JSON.stringify(data.timelines.daily)); // Sempre string
-          localStorage.setItem("location", search); // Isso salva como [object Object]
-        }
-      })
-      .catch(() => {
-        setWeather(null);
-        setError("Failed to fetch weather data.");
-      });
-  }
+  const { location, weather, error, loading } = useWeather();
 
   return (
     <div className="p-10 rounded-lg shadow-md ">
       <h2 className="mb-10">{location}</h2>
+      {loading && (
+        <div className="flex flex-col items-center justify-center my-10">
+          <svg className="animate-spin h-12 w-12 text-blue-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+          </svg>
+          <span className="text-blue-700 text-xl font-semibold">
+            {[
+              "Consultando os deuses do clima... ⛅",
+              "Verificando se vai chover ou fazer sol... ☀️🌧️",
+              "Buscando dados atmosféricos... 🌎",
+              "Preparando gráficos meteorológicos... 📊",
+              "Aguarde, o tempo está sendo analisado... ⏳"
+            ][Math.floor(Math.random() * 5)]}
+          </span>
+        </div>
+      )}
       {error && (
         <div className="text-red-500 font-semibold mt-55 text-center text-4xl">
           {error}
@@ -77,7 +31,7 @@ function Graphics() {
       )}
       <div className="weather-card max-w-6xl mx-auto min-w-xm">
         <h3 className="mb-10">Weather information of the next 5 days</h3>
-        {weather && (
+        {weather && !loading && (
           <div className="grid lg:grid-cols-2 gap-x-5 gap-y-5 grid-cols-1 ">
             <div className="weather-info">
               <h3>Real Temperature</h3>
