@@ -26,10 +26,17 @@ import { useState, useEffect } from "react";
 type ChartProps = {
   data: any[];
   YUnits?: (value: any) => string;
+  yLabel?: string;
 };
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
+    // Ordena os campos na ordem desejada
+    const order = ["Max", "Avg", "Min"];
+    const sortedPayload = [...payload].sort(
+      (a, b) => order.indexOf(a.name) - order.indexOf(b.name)
+    );
+
     return (
       <div
         style={{
@@ -41,15 +48,15 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       >
         <div
           style={{
-            color: "#000", // só o nome (label) fica colorido
+            color: "#000",
             fontWeight: 700,
             fontSize: "1.05rem",
             marginBottom: "6px",
           }}
         >
-          {label}
+          Day: {label}
         </div>
-        {payload.map((entry, idx) => (
+        {sortedPayload.map((entry, idx) => (
           <div key={idx} style={{ color: entry.color }}>
             {entry.name}: {entry.value}
           </div>
@@ -60,16 +67,24 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-function LineChartComponent({ data, YUnits }: ChartProps) {
+function LineChartComponent({ data, YUnits, yLabel }: ChartProps) {
   return (
     <ResponsiveContainer width="100%" height="100%" minWidth={150}>
       <LineChart data={data}>
         <CartesianGrid strokeDasharray="5 5" />
         <XAxis dataKey="day" />
-        <YAxis tickFormatter={YUnits} />
+        <YAxis
+          tickFormatter={YUnits}
+          label={{
+            value: yLabel,
+            angle: -90,
+            position: "insideLeft",
+            style: { textAnchor: "middle" }
+          }}
+        />
         <Tooltip content={<CustomTooltip />} />
-        <div>
-          <Legend align="center" verticalAlign="bottom" />
+        <div className="mb-10">
+          <Legend wrapperStyle={{ position: 'absolute', bottom: -20 }} />
         </div>
         <Line type="monotone" dataKey="Max" stroke="#82ca9d" />
         <Line type="monotone" dataKey="Avg" stroke="#ffc658" />
@@ -78,16 +93,24 @@ function LineChartComponent({ data, YUnits }: ChartProps) {
     </ResponsiveContainer>
   );
 }
-function BarChartComponent({ data, YUnits }: ChartProps) {
+function BarChartComponent({ data, YUnits, yLabel }: ChartProps) {
   return (
     <ResponsiveContainer width="100%" height="100%" minWidth={150}>
       <BarChart data={data}>
         <CartesianGrid strokeDasharray="5 5" />
         <XAxis dataKey="day" />
-        <YAxis tickFormatter={YUnits} />
+        <YAxis
+          tickFormatter={YUnits}
+          label={{
+            value: yLabel,
+            angle: -90,
+            position: "insideLeft",
+            style: { textAnchor: "middle" }
+          }}
+        />
         <Tooltip content={<CustomTooltip />} />
-        <div>
-          <Legend align="center" verticalAlign="bottom" />
+        <div className="mb-10">
+          <Legend wrapperStyle={{ position: 'absolute', bottom: -20 }} />
         </div>
         <Bar dataKey="Max" fill="#82ca9d" />
         <Bar dataKey="Avg" fill="#ffc658" />
@@ -97,22 +120,30 @@ function BarChartComponent({ data, YUnits }: ChartProps) {
   );
 }
 
-function AreaChartComponent({ data, YUnits }: ChartProps) {
+function AreaChartComponent({ data, YUnits, yLabel }: ChartProps) {
   return (
     <ResponsiveContainer width="100%" height="100%" minWidth={150}>
       <AreaChart data={data}>
         <CartesianGrid strokeDasharray="5 5" />
         <XAxis dataKey="day" scale="band" />
-        <YAxis tickFormatter={YUnits} />
+        <YAxis
+          tickFormatter={YUnits}
+          label={{
+            value: yLabel,
+            angle: -90,
+            position: "insideLeft",
+            style: { textAnchor: "middle" }
+          }}
+        />
         <Tooltip content={<CustomTooltip />} />
-        <div>
-          <Legend align="center" verticalAlign="bottom" />
+        <div className="mb-10">
+            <Legend wrapperStyle={{ position: 'absolute', bottom: -20 }} />
         </div>
         <Area
           type="monotone"
-          dataKey="Max"
-          stroke="#82ca9d"
-          fill="#82ca9d"
+          dataKey="Min"
+          stroke="#8884d8"
+          fill="#8884d8"
           stackId="1"
         />
         <Area
@@ -124,9 +155,9 @@ function AreaChartComponent({ data, YUnits }: ChartProps) {
         />
         <Area
           type="monotone"
-          dataKey="Min"
-          stroke="#8884d8"
-          fill="#8884d8"
+          dataKey="Max"
+          stroke="#82ca9d"
+          fill="#82ca9d"
           stackId="1"
         />
       </AreaChart>
@@ -134,16 +165,24 @@ function AreaChartComponent({ data, YUnits }: ChartProps) {
   );
 }
 
-function ComposedChartComponent({ data, YUnits }: ChartProps) {
+function ComposedChartComponent({ data, YUnits, yLabel }: ChartProps) {
   return (
     <ResponsiveContainer width="100%" height="100%" minWidth={150}>
       <ComposedChart data={data}>
         <CartesianGrid stroke="#f5f5f5" />
         <XAxis dataKey="day" scale="band" />
-        <YAxis tickFormatter={YUnits} />
+        <YAxis
+          tickFormatter={YUnits}
+          label={{
+            value: yLabel,
+            angle: -90,
+            position: "insideLeft",
+            style: { textAnchor: "middle" }
+          }}
+        />
         <Tooltip content={<CustomTooltip />} />
         <div>
-          <Legend align="center" verticalAlign="bottom" />
+          <Legend wrapperStyle={{ position: 'absolute', bottom: -20 }} />
         </div>
         <Bar dataKey="Max" barSize={20} fill="#82ca9d" />
         <Line type="monotone" dataKey="Max" stroke="#82ca9d" />
@@ -165,15 +204,15 @@ function SimpleRadarChartComponent({ data }: ChartProps) {
           <PolarRadiusAxis />
           <Tooltip content={<CustomTooltip />} />
           <Radar name="Speed" dataKey="Avg" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
-          <div>
-            <Legend align="center" verticalAlign="bottom" />  
+          <div className="mb-10">
+            <Legend wrapperStyle={{ position: 'absolute', bottom: -20 }} />
           </div>
         </RadarChart>
       </ResponsiveContainer>
     );
 }
 
-function ScatterChartComponent({ data, YUnits }: ChartProps) {
+function ScatterChartComponent({ data, YUnits, yLabel }: ChartProps) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -197,7 +236,16 @@ function ScatterChartComponent({ data, YUnits }: ChartProps) {
           dy={isMobile ? 0 : 10}
           height={isMobile ? 50 : 30}
         />
-        <YAxis type="number" tickFormatter={YUnits} />
+        <YAxis
+          type="number"
+          tickFormatter={YUnits}
+          label={{
+            value: yLabel,
+            angle: -90,
+            position: "insideLeft",
+            style: { textAnchor: "middle" }
+          }}
+        />
         <Tooltip />
         <div className="mb-10">
           <Legend wrapperStyle={{ position: 'absolute', bottom: -20 }} />
