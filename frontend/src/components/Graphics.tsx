@@ -15,11 +15,11 @@ function Graphics() {
           </svg>
           <span className="text-blue-700 text-xl font-semibold">
             {[
-              "Consultando os deuses do clima... ⛅",
-              "Verificando se vai chover ou fazer sol... ☀️🌧️",
-              "Buscando dados atmosféricos... 🌎",
-              "Preparando gráficos meteorológicos... 📊",
-              "Aguarde, o tempo está sendo analisado... ⏳"
+              "Consulting the weather gods... ⛅",
+              "Checking if it will rain or shine... ☀️🌧️",
+              "Fetching atmospheric data... 🌎",
+              "Preparing weather charts... 📊",
+              "Please wait, analyzing the weather... ⏳"
             ][Math.floor(Math.random() * 5)]}
           </span>
         </div>

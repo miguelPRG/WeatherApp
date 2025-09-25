@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 type WeatherContextType = {
   location: string | null;
@@ -10,7 +10,7 @@ type WeatherContextType = {
 
 const WeatherContext = createContext<WeatherContextType | undefined>(undefined);
 
-export const WeatherProvider = ({ children }: { children: ReactNode }) => {
+export const WeatherProvider = ({ children }: { children: any }) => {
   const [location, setLocation] = useState<string | null>(null);
   const [weather, setWeather] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
@@ -19,11 +19,11 @@ export const WeatherProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const fetchInitialData = async () => {
       setLoading(true); // <- Adicionado para garantir loading no início
-      const res = await fetch("http://ip-api.com/json/");
+      const res = await fetch("https://ipapi.co/json/");
       const data = await res.json();
       const city = data.city;
-      const region = data.regionName;
-      const country = data.country;
+      const region = data.region;
+      const country = data.country_name;
       setLocation(`${city}, ${region}, ${country}`);
 
       const storedWeather = localStorage.getItem("weather");
@@ -75,7 +75,7 @@ export const WeatherProvider = ({ children }: { children: ReactNode }) => {
   async function fetchWeather(search: string) {
     try {
       console.log("Fetching weather for:", search);
-      const res = await fetch(`http://localhost:8000/weather?location=${search}`);
+      const res = await fetch(`https://wheatherapp-f695.onrender.com/weather?location=${search}`);
       const data = await res.json();
 
         if (data.error) {
