@@ -5,7 +5,21 @@ require('dotenv').config();
 const app = express();
 const port = 8000;
 
-app.use(cors());
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://weather-app-pearl-one-15.vercel.app"
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  }
+}));
+
 
 // Compatibilidade para fetch em Node.js < 18
 

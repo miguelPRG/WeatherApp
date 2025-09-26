@@ -33,7 +33,11 @@ export const WeatherProvider = ({ children }: { children: any }) => {
         if (storedWeather) {
           const weatherData = JSON.parse(storedWeather);
           const today = new Date();
-          if (Array.isArray(weatherData) && weatherData.length > 0 && weatherData[0]?.time) {
+          if (
+            Array.isArray(weatherData) &&
+            weatherData.length > 0 &&
+            weatherData[0]?.time
+          ) {
             const firstDay = new Date(weatherData[0].time);
             if (
               firstDay.getDate() === today.getDate() &&
@@ -75,17 +79,18 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   async function fetchWeather(search: string) {
     try {
       console.log("Fetching weather for:", search);
-      const res = await fetch(`https://wheatherapp-f695.onrender.com/weather?location=${search}`);
+      const res = await fetch(
+        `https://weatherapp-2py6.onrender.com/weather?location=${search}`,
+      );
       const data = await res.json();
 
-        if (data.error) {
+      if (data.error) {
         throw new Error(data.error);
-        }
+      }
 
-        return data.timelines.daily;
+      return data.timelines.daily;
     } catch (error: any) {
-        throw new Error(error.message || "Failed to fetch weather data.");
-
+      throw new Error(error.message || "Failed to fetch weather data.");
     }
   }
 
@@ -105,7 +110,9 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   };
 
   return (
-    <WeatherContext.Provider value={{ location, weather, error, searchWeather, loading }}>
+    <WeatherContext.Provider
+      value={{ location, weather, error, searchWeather, loading }}
+    >
       {children}
     </WeatherContext.Provider>
   );
@@ -113,6 +120,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
 
 export const useWeather = () => {
   const context = useContext(WeatherContext);
-  if (!context) throw new Error("useWeather must be used within WeatherProvider");
+  if (!context)
+    throw new Error("useWeather must be used within WeatherProvider");
   return context;
 };

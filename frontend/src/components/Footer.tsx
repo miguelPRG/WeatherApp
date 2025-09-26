@@ -32,7 +32,16 @@ function Footer() {
     >
       <p className="text-md">
         &copy; {getCurrentDate()} Weather App. All rights reserved to
-        <span className="font-bold underline hover:text-black"> <a href="https://www.linkedin.com/in/miguel-gon%C3%A7alves-087195169/" rel="external nofollow" target="_blank">Miguel Gonçalves.</a></span>
+        <span className="font-bold underline hover:text-black">
+          {" "}
+          <a
+            href="https://www.linkedin.com/in/miguel-gon%C3%A7alves-087195169/"
+            rel="external nofollow"
+            target="_blank"
+          >
+            Miguel Gonçalves.
+          </a>
+        </span>
       </p>
     </footer>
   );

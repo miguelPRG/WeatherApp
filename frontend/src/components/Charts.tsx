@@ -29,12 +29,13 @@ type ChartProps = {
   yLabel?: string;
 };
 
+// This will be used to customize the tooltip content presentation in all charts
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     // Ordena os campos na ordem desejada
     const order = ["Max", "Avg", "Min"];
     const sortedPayload = [...payload].sort(
-      (a, b) => order.indexOf(a.name) - order.indexOf(b.name)
+      (a, b) => order.indexOf(a.name) - order.indexOf(b.name),
     );
 
     return (
@@ -79,12 +80,12 @@ function LineChartComponent({ data, YUnits, yLabel }: ChartProps) {
             value: yLabel,
             angle: -90,
             position: "insideLeft",
-            style: { textAnchor: "middle" }
+            style: { textAnchor: "middle" },
           }}
         />
         <Tooltip content={<CustomTooltip />} />
         <div className="mb-10">
-          <Legend wrapperStyle={{ position: 'absolute', bottom: -20 }} />
+          <Legend wrapperStyle={{ position: "absolute", bottom: -20 }} />
         </div>
         <Line type="monotone" dataKey="Max" stroke="#82ca9d" />
         <Line type="monotone" dataKey="Avg" stroke="#ffc658" />
@@ -105,12 +106,12 @@ function BarChartComponent({ data, YUnits, yLabel }: ChartProps) {
             value: yLabel,
             angle: -90,
             position: "insideLeft",
-            style: { textAnchor: "middle" }
+            style: { textAnchor: "middle" },
           }}
         />
         <Tooltip content={<CustomTooltip />} />
         <div className="mb-10">
-          <Legend wrapperStyle={{ position: 'absolute', bottom: -20 }} />
+          <Legend wrapperStyle={{ position: "absolute", bottom: -20 }} />
         </div>
         <Bar dataKey="Max" fill="#82ca9d" />
         <Bar dataKey="Avg" fill="#ffc658" />
@@ -132,12 +133,12 @@ function AreaChartComponent({ data, YUnits, yLabel }: ChartProps) {
             value: yLabel,
             angle: -90,
             position: "insideLeft",
-            style: { textAnchor: "middle" }
+            style: { textAnchor: "middle" },
           }}
         />
         <Tooltip content={<CustomTooltip />} />
         <div className="mb-10">
-            <Legend wrapperStyle={{ position: 'absolute', bottom: -20 }} />
+          <Legend wrapperStyle={{ position: "absolute", bottom: -20 }} />
         </div>
         <Area
           type="monotone"
@@ -177,12 +178,12 @@ function ComposedChartComponent({ data, YUnits, yLabel }: ChartProps) {
             value: yLabel,
             angle: -90,
             position: "insideLeft",
-            style: { textAnchor: "middle" }
+            style: { textAnchor: "middle" },
           }}
         />
         <Tooltip content={<CustomTooltip />} />
         <div>
-          <Legend wrapperStyle={{ position: 'absolute', bottom: -20 }} />
+          <Legend wrapperStyle={{ position: "absolute", bottom: -20 }} />
         </div>
         <Bar dataKey="Max" barSize={20} fill="#82ca9d" />
         <Line type="monotone" dataKey="Max" stroke="#82ca9d" />
@@ -196,20 +197,26 @@ function ComposedChartComponent({ data, YUnits, yLabel }: ChartProps) {
 }
 
 function SimpleRadarChartComponent({ data }: ChartProps) {
-   return (
-      <ResponsiveContainer width="100%" height="100%" minWidth={150}>
-        <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
-          <PolarGrid />
-          <PolarAngleAxis dataKey="day" />
-          <PolarRadiusAxis />
-          <Tooltip content={<CustomTooltip />} />
-          <Radar name="Speed" dataKey="Avg" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
-          <div className="mb-10">
-            <Legend wrapperStyle={{ position: 'absolute', bottom: -20 }} />
-          </div>
-        </RadarChart>
-      </ResponsiveContainer>
-    );
+  return (
+    <ResponsiveContainer width="100%" height="100%" minWidth={150}>
+      <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
+        <PolarGrid />
+        <PolarAngleAxis dataKey="day" />
+        <PolarRadiusAxis />
+        <Tooltip content={<CustomTooltip />} />
+        <Radar
+          name="Speed"
+          dataKey="Avg"
+          stroke="#8884d8"
+          fill="#8884d8"
+          fillOpacity={0.6}
+        />
+        <div className="mb-10">
+          <Legend wrapperStyle={{ position: "absolute", bottom: -20 }} />
+        </div>
+      </RadarChart>
+    </ResponsiveContainer>
+  );
 }
 
 function ScatterChartComponent({ data, YUnits, yLabel }: ChartProps) {
@@ -243,12 +250,12 @@ function ScatterChartComponent({ data, YUnits, yLabel }: ChartProps) {
             value: yLabel,
             angle: -90,
             position: "insideLeft",
-            style: { textAnchor: "middle" }
+            style: { textAnchor: "middle" },
           }}
         />
         <Tooltip />
         <div className="mb-10">
-          <Legend wrapperStyle={{ position: 'absolute', bottom: -20 }} />
+          <Legend wrapperStyle={{ position: "absolute", bottom: -20 }} />
         </div>
         <Scatter name="Max" data={data} fill="#82ca9d" dataKey="Max" />
         <Scatter name="Avg" data={data} fill="#ffc658" dataKey="Avg" />
