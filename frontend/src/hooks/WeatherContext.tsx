@@ -80,9 +80,11 @@ export const WeatherProvider = ({ children }: { children: any }) => {
     try {
       console.log("Fetching weather for:", search);
       const res = await fetch(
-        `https://weatherapp-2py6.onrender.com/weather?location=${search}`,
+        `https://weatherapp-69gt.onrender.com/weather?location=${search}`,
       );
       const data = await res.json();
+
+      console.log(data)
 
       if (data.error) {
         throw new Error(data.error);

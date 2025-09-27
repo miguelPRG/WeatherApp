@@ -1,5 +1,14 @@
 import { useWeather } from "../hooks/WeatherContext";
-import * as Chart from "./Charts";
+import { lazy } from "react";
+
+const Chart = {
+  LineChartComponent: lazy(() => import("./Charts").then(m => ({ default: m.LineChartComponent }))),
+  BarChartComponent: lazy(() => import("./Charts").then(m => ({ default: m.BarChartComponent }))),
+  AreaChartComponent: lazy(() => import("./Charts").then(m => ({ default: m.AreaChartComponent }))),
+  ComposedChartComponent: lazy(() => import("./Charts").then(m => ({ default: m.ComposedChartComponent }))),
+  SimpleRadarChartComponent: lazy(() => import("./Charts").then(m => ({ default: m.SimpleRadarChartComponent }))),
+  ScatterChartComponent: lazy(() => import("./Charts").then(m => ({ default: m.ScatterChartComponent }))),
+};
 
 function Graphics() {
   const { location, weather, error, loading } = useWeather();

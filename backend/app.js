@@ -8,7 +8,7 @@ const port = 8000;
 
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://weather-app-pearl-one-15.vercel.app"
+  "https://weather-app-henna-two-41.vercel.app"
 ];
 
 app.use(cors({
@@ -56,9 +56,14 @@ app.get('/weather', async (req, res) => {
     const response = await fetch(url);
     const data = await response.json();
     console.log(data);
-    if (!response.ok) throw new Error(data.message || "Erro na resposta da API Tomorrow.io");
-    res.json(data);
+
+    if (!response.ok || data.code || data.error || data.message) {
+      return res.status(404).json({ error: "Location not found or invalid." });
+    }
+
+    res.status(200).json(data);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: error.message });
   }
 });

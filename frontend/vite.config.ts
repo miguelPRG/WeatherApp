@@ -13,4 +13,17 @@ export default defineConfig({
     },
     hmr: true,
   },
+  //Building Optimization
+  build: {
+    minify: 'esbuild',
+    sourcemap: false,  
+    chunkSizeWarningLimit: 500, 
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ['react', 'react-dom'],
+        },
+      },
+    },
+  },
 });
