@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 const app = express();
@@ -20,8 +21,29 @@ app.use(cors({
   }
 }));
 
+// Limit per second
+const perSecondLimiter = rateLimit({
+  windowMs: 1000, // 1 second
+  max: 3,
+  message: "Too many requests."
+});
 
-// Compatibilidade para fetch em Node.js < 18
+// Limit per hour
+const perHourLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 25,
+  message: "Too many requests."
+});
+
+// Limit per day
+const perDayLimiter = rateLimit({
+  windowMs: 24 * 60 * 60 * 1000, // 1 day
+  max: 500,
+  message: "Too many requests."
+});
+
+// Applying rate limiters to the /weather endpoint
+app.use('/weather', perSecondLimiter, perHourLimiter, perDayLimiter);
 
 app.get('/weather', async (req, res) => {
   const apiKey = process.env.TOMORROW_API_KEY;
