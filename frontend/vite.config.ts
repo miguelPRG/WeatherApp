@@ -15,13 +15,13 @@ export default defineConfig({
   },
   //Building Optimization
   build: {
-    minify: 'esbuild',
-    sourcemap: false,  
-    chunkSizeWarningLimit: 500, 
+    minify: "esbuild",
+    sourcemap: false,
+    chunkSizeWarningLimit: 500,
     rollupOptions: {
       output: {
         manualChunks: {
-          react: ['react', 'react-dom'],
+          react: ["react", "react-dom"],
         },
       },
     },

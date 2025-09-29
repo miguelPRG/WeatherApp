@@ -27,19 +27,28 @@ Frontend built with **React**, **Vite**, **TailwindCSS**, and **Recharts**. Back
 
 ## 🧑‍💻 Getting Started
 
-### Prerequisites
+### Creating .env file
+
+- Create a `.env` file and add your [Tomorrow.io API key](https://app.tomorrow.io/development/keys):
+    ```
+    TOMORROW_API_KEY=your_api_key_here
+    ```
+
+### Option 1: Local Setup (Node.js & npm)
+
+#### Prerequisites
 
 - [Node.js](https://nodejs.org/) (v22+ recommended)
 - [npm](https://www.npmjs.com/)
 
-### 1. Clone the Repository
+#### 1. Clone the Repository
 
 ```sh
 git clone https://github.com/miguelPRG/WeatherApp.git
 cd WeatherApp
 ```
 
-### 2. Setup the Backend
+#### 2. Setup the Backend
 
 1. Go to the backend folder:
     ```sh
@@ -49,17 +58,13 @@ cd WeatherApp
     ```sh
     npm install
     ```
-3. Create a `.env` file and add your [Tomorrow.io API key](https://app.tomorrow.io/development/keys)
-    ```
-    TOMORROW_API_KEY=your_api_key_here
-    ```
-4. Start the backend server:
+3. Start the backend server:
     ```sh
     npm run server
     ```
     The backend will run on [http://localhost:8000](http://localhost:8000)
 
-### 3. Setup the Frontend
+#### 3. Setup the Frontend
 
 1. Open a new terminal and go to the frontend folder:
     ```sh
@@ -75,6 +80,33 @@ cd WeatherApp
     ```
     The frontend will run on [http://localhost:3000](http://localhost:3000)
 
+### Option 2: Using Docker (Development Only)
+
+#### 🐳 Docker (Development Only)
+
+This project includes Docker configuration to simplify **development setup**.  
+It allows you to run both frontend and backend in isolated containers without installing Node.js or npm locally for each part.  
+
+> ⚠️ Note: Docker is configured **for development purposes only**, not for production deployment. For production, you would need to build the frontend and deploy containers to a server or a cloud service. This project runs in [Render](https://render.com/)(backend) and [Vercel](https://vercel.com/)(frontend)
+
+#### 1. Start the App with Docker
+
+From the project root, run:
+
+```sh
+docker-compose up --build
+```
+This will start:
+
+. Backend on [http://localhost:8000](http://localhost:8000)
+. Frontend on [http://localhost:3000](http://localhost:3000)
+
+#### 2. Stop the Containers
+
+```sh
+docker-compose down
+```
+
 ## Usage
 
 - On load, the app requests your location and shows weather data automatically.
@@ -86,20 +118,24 @@ cd WeatherApp
 
 ```
 backend/
-  app.js
-  package.json
-  .env
+    app.js
+    package.json
+    Dockerfile
+    .dockerignore
+    .env
 frontend/
-  src/
-    components/
-    hooks/
-    styles/
-    App.tsx
-    main.tsx
-  public/
-  package.json
-  tailwind.config.js
-  vite.config.ts
+    src/
+        components/
+        hooks/
+        styles/
+        App.tsx
+        main.tsx
+    public/
+    package.json
+    vite.config.ts
+    Dockerfile
+    .dockerignore
+docker-compose.yml
 ```
 
 ## License
