@@ -13,6 +13,10 @@ export default defineConfig({
     },
     hmr: true,
   },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+  },
   //Building Optimization
   build: {
     minify: "esbuild",
