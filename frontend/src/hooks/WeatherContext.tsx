@@ -19,17 +19,18 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   useEffect(() => {
     const fetchInitialData = async () => {
       setLoading(true); // <- Adicionado para garantir loading no início
-      const res = await fetch("https://ipapi.co/json/");
-      const data = await res.json();
-      const city = data.city;
-      const region = data.region;
-      const country = data.country_name;
-      setLocation(`${city}, ${region}, ${country}`);
-
-      const storedWeather = localStorage.getItem("weather");
-      let freshWeather;
 
       try {
+        const res = await fetch("https://ipapi.co/json/");
+        const data = await res.json();
+        const city = data.city;
+        const region = data.region;
+        const country = data.country_name;
+        setLocation(`${city}, ${region}, ${country}`);
+
+        const storedWeather = localStorage.getItem("weather");
+        let freshWeather;
+
         if (storedWeather) {
           const weatherData = JSON.parse(storedWeather);
           const today = new Date();

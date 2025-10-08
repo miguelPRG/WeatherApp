@@ -1,27 +1,51 @@
-import { describe, it, expect } from 'vitest'
-import { render, screen } from '@testing-library/react'
-import Footer from '../../src/components/Footer'
+import { describe, it, expect, beforeEach } from "vitest";
+import { render, screen, waitFor } from "@testing-library/react";
+import Footer from "../../src/components/Footer";
 
-describe('Footer Component', () => {
-  it('should display the current year', () => {
-    render(<Footer />)
-    const year = new Date().getFullYear()
-    expect(screen.getByText(new RegExp(`${year}`))).toBeTruthy()
-  })
+describe("Footer component", () => {
+  beforeEach(() => {
+    // Render Footer component before each test
+    render(<Footer />);
+  });
 
-  it("should contain a link to Miguel Gonçalves's LinkedIn", () => {
-    render(<Footer />)
-    const link = screen.getByRole('link', { name: /Miguel Gonçalves/i })
-    expect(link).toBeTruthy()
-    expect(link.getAttribute('href')).toContain('https://www.linkedin.com/in/miguel-gon%C3%A7alves-087195169/')
-    expect(link.getAttribute('target')).toBe('_blank')
-    expect(link.getAttribute('rel')).toContain('external')
-  })
+  it("renders the current year", () => {
+    const year = new Date().getFullYear();
+    expect(screen.getByText(new RegExp(`${year}`))).toBeDefined();
+  });
 
-  it('should render the copyright text', () => {
-    render(<Footer />)
-    expect(screen.getByText(/Weather App. All rights reserved/i)).toBeTruthy()
-  })
+  it("renders the copyright text", () => {
+    expect(
+      screen.getByText(/Weather App. All rights reserved to/i),
+    ).toBeDefined();
+  });
 
+  it("renders the LinkedIn link", () => {
+    const link = screen.getByRole("link", { name: /Miguel Gonçalves/i });
+    expect(link).toHaveProperty(
+      "href",
+      "https://www.linkedin.com/in/miguel-gon%C3%A7alves-087195169/",
+    );
+    expect(link).toHaveProperty("target", "_blank");
+    expect(link).toHaveProperty("rel", "external nofollow");
+  });
 
-})
+  it("footer hides when not at bottom", () => {
+    const footer = screen.getByRole("contentinfo");
+    window.scrollY = 0;
+    window.innerHeight = 600;
+    window.dispatchEvent(new Event("scroll"));
+    expect(footer.className).toMatch(/footer-fade-out/);
+    expect(footer.className).toMatch(/opacity-0/);
+  });
+
+  it("footer becomes visible when scrolled to bottom", async () => {
+    window.scrollY = 400;
+    window.innerHeight = 600;
+    window.dispatchEvent(new Event("scroll"));
+    const footer = await screen.findByRole("contentinfo");
+    await waitFor(() => {
+      expect(footer.className).toMatch(/footer-fade-in/);
+      expect(footer.className).toMatch(/opacity-100/);
+    });
+  });
+});
