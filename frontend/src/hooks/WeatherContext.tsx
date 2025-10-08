@@ -17,83 +17,89 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    // Getting initial location and weather data
     const fetchInitialData = async () => {
-      setLoading(true); // <- Adicionado para garantir loading no início
+      setLoading(true);
 
       try {
-        const res = await fetch("https://ipapi.co/json/");
-        const data = await res.json();
-        const city = data.city;
-        const region = data.region;
-        const country = data.country_name;
-        setLocation(`${city}, ${region}, ${country}`);
-
+        // First check if there's data in localStorage
         const storedWeather = localStorage.getItem("weather");
-        let freshWeather;
+        const storedLocation = localStorage.getItem("location");
 
-        if (storedWeather) {
+        if (storedWeather && storedLocation) {
           const weatherData = JSON.parse(storedWeather);
           const today = new Date();
+          const firstDay = new Date(weatherData[0]?.time);
+
+          // If the data is from today, use stored data
           if (
-            Array.isArray(weatherData) &&
-            weatherData.length > 0 &&
-            weatherData[0]?.time
+            firstDay.getDate() === today.getDate() &&
+            firstDay.getMonth() === today.getMonth() &&
+            firstDay.getFullYear() === today.getFullYear()
           ) {
-            const firstDay = new Date(weatherData[0].time);
-            if (
-              firstDay.getDate() === today.getDate() &&
-              firstDay.getMonth() === today.getMonth() &&
-              firstDay.getFullYear() === today.getFullYear()
-            ) {
-              setWeather(weatherData);
-              freshWeather = weatherData;
-            } else {
-              freshWeather = await fetchWeather(city);
-              setWeather(freshWeather);
-              setError(null);
-            }
-          } else {
-            // Cache inválido, buscar novamente
-            freshWeather = await fetchWeather(city);
-            setWeather(freshWeather);
-            setError(null);
+            setLocation(storedLocation);
+            setWeather(weatherData);
+            setLoading(false);
+            return;
           }
-        } else {
-          console.log("No stored weather data found.");
-          freshWeather = await fetchWeather(city);
-          setWeather(freshWeather);
-          setError(null);
         }
 
+        // If there's no valid data in localStorage, get current location
+        let city, region, country;
+
+        // Try via GPS
+        const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, {
+            enableHighAccuracy: true,
+            timeout: 5000,
+          });
+        });
+
+        const { latitude, longitude } = position.coords;
+
+        // Reverse geocoding to get city name
+        const reverseRes = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+        );
+        const reverseData = await reverseRes.json();
+
+        city = reverseData.address.city || reverseData.address.town || reverseData.address.village;
+        region = reverseData.address.county;
+        country = reverseData.address.country;
+
+        const currentLocation = `${city}, ${region}, ${country}`;
+        setLocation(currentLocation);
+
+        // Fetch weather data for current location
+        const freshWeather = await fetchWeather(city);
+        setWeather(freshWeather);
+        
+        // Save to localStorage
         localStorage.setItem("weather", JSON.stringify(freshWeather));
-      } catch (err: any) {
-        setWeather(null);
-        setError(err.message);
+        localStorage.setItem("location", currentLocation);
+
+      } catch (geoError) {
+        console.warn("GPS failed:", geoError);
+        setError("Could not get location");
       } finally {
         setLoading(false);
       }
     };
+
     fetchInitialData();
   }, []);
 
-  // This one we don't need to share, so it's inside the provider
   async function fetchWeather(search: string) {
     try {
-      console.log("Fetching weather for:", search);
       const res = await fetch(
-        `https://weatherapp-69gt.onrender.com/weather?location=${search}`,
+        `https://weatherapp-69gt.onrender.com/weather?location=${encodeURIComponent(search)}`
       );
       const data = await res.json();
 
-      console.log(data);
-
-      if (data.error) {
-        throw new Error(data.error);
-      }
-
+      if (data.error) throw new Error(data.error);
       return data.timelines.daily;
     } catch (error: any) {
-      throw new Error(error.message || "Failed to fetch weather data.");
+      throw new Error("Failed to fetch weather data");
     }
   }
 
@@ -113,9 +119,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   };
 
   return (
-    <WeatherContext.Provider
-      value={{ location, weather, error, searchWeather, loading }}
-    >
+    <WeatherContext.Provider value={{ location, weather, error, searchWeather, loading }}>
       {children}
     </WeatherContext.Provider>
   );
@@ -123,7 +127,6 @@ export const WeatherProvider = ({ children }: { children: any }) => {
 
 export const useWeather = () => {
   const context = useContext(WeatherContext);
-  if (!context)
-    throw new Error("useWeather must be used within WeatherProvider");
+  if (!context) throw new Error("useWeather must be used within WeatherProvider");
   return context;
 };
