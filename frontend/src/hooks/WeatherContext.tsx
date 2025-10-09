@@ -92,7 +92,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
   async function fetchWeather(search: string) {
     try {
       const res = await fetch(
-        `https://weatherapp-69gt.onrender.com/weather?location=${encodeURIComponent(search)}`
+        `https://weatherapp-3tl7.onrender.com/weather?location=${encodeURIComponent(search)}`
       );
       const data = await res.json();
 
