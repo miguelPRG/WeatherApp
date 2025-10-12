@@ -17,7 +17,7 @@ Frontend built with **React**, **Vite**, **TailwindCSS**, and **Recharts**. Back
 
 ## 📷 Screenshots
 
-![Weather App Screenshot](frontend/public/screenshot.png)
+![Weather App Screenshot](frontend/assets/screenshot.png)
 
 ## 🛠 Tech Stack
 
