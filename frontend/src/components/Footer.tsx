@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-//Function to get the date of today
+// Function to get the current year
 function getCurrentDate() {
   const today = new Date();
   return today.getFullYear();
@@ -12,21 +12,40 @@ function Footer() {
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.innerHeight + window.scrollY;
-      const bottom = document.body.offsetHeight - 2; // margem de erro
-      if (scrollPosition >= bottom) {
+      const bottom = document.body.offsetHeight - 2;
+      setShowFooter(scrollPosition >= bottom);
+    };
+
+    const checkInitial = () => {
+      if (document.body.offsetHeight <= window.innerHeight) {
         setShowFooter(true);
       } else {
-        setShowFooter(false);
+        handleScroll();
       }
     };
 
+    checkInitial();
+
+    // normal events
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("resize", checkInitial);
+
+    // Observer for dynamic content changes in order the footer rerender properly
+    const observer = new MutationObserver(() => {
+      checkInitial();
+    });
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", checkInitial);
+      observer.disconnect();
+    };
   }, []);
 
   return (
     <footer
-      className={`w-full p-8 bg-blue-500 text-white text-center h-5 fixed bottom-0 flex flex-col justify-center
+      className={`w-full p-8 bg-blue-500 text-white text-center h-5 fixed bottom-0 flex flex-col justify-center transition-all duration-500
         ${showFooter ? "footer-fade-in opacity-100" : "footer-fade-out opacity-0 pointer-events-none"}
       `}
     >
