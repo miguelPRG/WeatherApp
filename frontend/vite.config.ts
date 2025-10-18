@@ -18,6 +18,12 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
+    poolOptions: {
+      threads: {
+        isolate: true,
+      }
+    },
+    setupFiles: "./tests/setupTests.ts",
   },
   //Building Optimization
   build: {

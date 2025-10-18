@@ -33,8 +33,14 @@ Frontend built with **React**, **Vite**, **TailwindCSS**, and **Recharts**. Back
     ```
     TOMORROW_API_KEY=your_api_key_here
     ```
+### Option 1: Using Docker (Development Only)
 
-### Option 1: Local Setup (Node.js & npm)
+#### 🐳 Docker (Development Only)
+
+This project includes Docker configuration to simplify **development setup**.  
+It allows you to run both frontend and backend in isolated containers without installing Node.js or npm locally for each part.  
+
+### Option 2: Local Setup (Node.js & npm)
 
 #### Prerequisites
 
@@ -80,13 +86,6 @@ cd WeatherApp
     ```
     The frontend will run on [http://localhost:3000](http://localhost:3000)
 
-### Option 2: Using Docker (Development Only)
-
-#### 🐳 Docker (Development Only)
-
-This project includes Docker configuration to simplify **development setup**.  
-It allows you to run both frontend and backend in isolated containers without installing Node.js or npm locally for each part.  
-
 > ⚠️ Note: Docker is configured **for development purposes only**, not for production deployment. For production, you would need to build the frontend and deploy containers to a server or a cloud service. This project runs in [Render](https://render.com/)(backend) and [Vercel](https://vercel.com/)(frontend)
 
 #### 1. Start the App with Docker
@@ -114,6 +113,20 @@ docker-compose down
 - Data is cached in local storage to reduce API calls.
 - Explore charts for temperature, humidity, wind speed, cloud cover, evapotranspiration, and UV index.
 
+## Error Handeling
+
+### Location Not Found
+
+Here is a screenshot where the user's current location is not correctly fetched, wether if it's because the user's browser has not location permissions or some other problem
+
+![Error Screenshot](./frontend/public/locationNotFound.png)
+
+### City Not Found
+
+Here is a screenshot where the user's asked city was not found
+
+![Error Screenshot](./frontend/public/cityNotFound.png)
+
 ## Project Structure
 
 ```
@@ -130,12 +143,17 @@ frontend/
         styles/
         App.tsx
         main.tsx
+    tests/
+        components/
+        hooks/
     public/
     package.json
     vite.config.ts
     Dockerfile
     .dockerignore
 docker-compose.yml
+LICENSE
+README.md
 ```
 
 ## License

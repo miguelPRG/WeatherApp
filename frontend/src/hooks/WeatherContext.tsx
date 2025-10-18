@@ -51,7 +51,6 @@ export const WeatherProvider = ({ children }: { children: any }) => {
         const position = await new Promise<GeolocationPosition>((resolve, reject) => {
           navigator.geolocation.getCurrentPosition(resolve, reject, {
             enableHighAccuracy: true,
-            timeout: 5000,
           });
         });
 

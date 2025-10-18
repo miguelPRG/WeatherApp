@@ -31,11 +31,14 @@ function Graphics() {
       <h2 className="mb-10">{location}</h2>
       {loading && <LoadingAnimation />}
       {error? (
-        <div className="text-red-500 font-semibold mt-55 text-center text-4xl">
+        <div 
+          className="text-red-500 font-semibold mt-55 text-center text-4xl"
+          data-testid="error-message"
+        >
           {error}
         </div>
-      ): 
-          <div className="weather-card max-w-6xl mx-auto min-w-xm">
+      ) :
+        <div className="weather-card max-w-6xl mx-auto min-w-xm">
         <h3 className="mb-10">Weather information of the next 5 days</h3>
         {weather && !loading && (
           <div className="grid lg:grid-cols-2 gap-x-5 gap-y-5 grid-cols-1 ">
