@@ -99,7 +99,7 @@ export const WeatherProvider = ({ children }: { children: any }) => {
       setIsFetching(true);
 
       const res = await fetch(
-        `https://weatherapp-3tl7.onrender.com/weather?location=${encodeURIComponent(search)}`
+        `https://weatherapp-kk01.onrender.com/weather?location=${encodeURIComponent(search)}`
       );
       const data = await res.json();
 

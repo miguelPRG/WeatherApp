@@ -8,7 +8,7 @@ const port = 8000;
 
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://weather-app-henna-two-41.vercel.app"
+  "https://weather-app-ruddy-iota-13.vercel.app"
 ];
 
 app.use(cors({

@@ -5,7 +5,7 @@ Frontend built with **React**, **Vite**, **TailwindCSS**, and **Recharts**. Back
 
 ## 🚀 Live Demo
 
-👉 [View the app on Vercel](https://weather-app-henna-two-41.vercel.app/)
+👉 [View the app on Vercel](https://weather-app-ruddy-iota-13.vercel.app/)
 
 ## ✨ Features
 
