@@ -7,7 +7,7 @@ WORKDIR /app
 COPY . ./
 
 # Installing Dependencies
-RUN npm install -g npm@11.6.1 && npm install && npm prune
+RUN npm install -g npm@latest && npm install --omit=dev && npm prune
 
 ENV NODE_ENV=production
 

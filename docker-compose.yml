@@ -15,7 +15,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     expose:
-      - "8000" # só expõe internamente na rede do compose
+      - "8000" # only expose to frontend container and not for anyone else
     networks:
       - appnet
 

@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY . ./
 # Installing Dependencies
-RUN npm install -g npm@11.6.1 && npm install --omit=dev && npm prune
+RUN npm install -g npm@latest && npm install --omit=dev && npm prune
 
 EXPOSE 3000
 
