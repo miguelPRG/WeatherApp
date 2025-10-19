@@ -1,9 +1,15 @@
-function LoadingAnimation() {
+function LoadingAnimation({ progress }: { progress: number }) {
   return (
-    <div 
-      className="flex justify-center items-center h-16"
-      data-testid="loading-animation">
-      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+    <div className="w-full max-w-md mx-auto mt-6" data-testid="loading-animation">
+      <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+        <div
+          className="bg-blue-500 h-4 transition-all duration-200 ease-in-out"
+          style={{ width: `${progress}%` }}
+        ></div>
+      </div>
+      <p className="text-center text-sm mt-2 text-gray-600 font-medium">
+        {progress}% carregado...
+      </p>
     </div>
   );
 }

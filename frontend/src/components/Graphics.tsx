@@ -24,12 +24,12 @@ const Chart = {
 };
 
 function Graphics() {
-  const { location, weather, error, loading } = useWeather();
+  const { location, weather, error, progress } = useWeather();
 
   return (
     <div className="p-10 rounded-lg shadow-md ">
       <h2 className="mb-10">{location}</h2>
-      {loading && <LoadingAnimation />}
+      {progress < 100 && <LoadingAnimation progress={progress} />}
       {error? (
         <div 
           className="text-red-500 font-semibold mt-55 text-center text-4xl"
@@ -40,11 +40,11 @@ function Graphics() {
       ) :
         <div className="weather-card max-w-6xl mx-auto min-w-xm">
         <h3 className="mb-10">Weather information of the next 5 days</h3>
-        {weather && !loading && (
+        {weather && (
           <div className="grid lg:grid-cols-2 gap-x-5 gap-y-5 grid-cols-1 ">
             <div className="weather-info">
               <h3>Real Temperature</h3>
-              <Suspense fallback={<LoadingAnimation />}>
+              <Suspense fallback={<LoadingAnimation progress={progress}/>}>
                 <Chart.LineChartComponent
                   data={weather.map((day: any) => ({
                     day: new Date(day.time).getDate(),
@@ -58,7 +58,7 @@ function Graphics() {
             </div>
             <div className="weather-info">
               <h3>Humidity</h3>
-              <Suspense fallback={<LoadingAnimation />}>
+              <Suspense fallback={<LoadingAnimation progress={progress}/>}>
                 <Chart.BarChartComponent
                   data={weather.map((day: any) => ({
                     day: new Date(day.time).getDate(),
@@ -72,7 +72,7 @@ function Graphics() {
             </div>
             <div className="weather-info">
               <h3 className="break-all">Evapotranspiration</h3>
-              <Suspense fallback={<LoadingAnimation />}>
+              <Suspense fallback={<LoadingAnimation progress={progress}/>}>
                 <Chart.AreaChartComponent
                   data={weather.map((day: any) => ({
                     day: new Date(day.time).getDate(),
@@ -86,7 +86,7 @@ function Graphics() {
             </div>
             <div className="weather-info">
               <h3>Cloud Cover</h3>
-              <Suspense fallback={<LoadingAnimation />}>
+              <Suspense fallback={<LoadingAnimation progress={progress}/>}>
                 <Chart.ComposedChartComponent
                   data={weather.map((day: any) => ({
                     day: new Date(day.time).getDate(),
@@ -100,7 +100,7 @@ function Graphics() {
             </div>
             <div className="weather-info">
               <h3>Avarage Wind Speed</h3>
-              <Suspense fallback={<LoadingAnimation />}>
+              <Suspense fallback={<LoadingAnimation progress={progress}/>}>
                 <Chart.SimpleRadarChartComponent
                   data={weather.map((day: any) => ({
                     day: new Date(day.time).getDate(),
@@ -112,7 +112,7 @@ function Graphics() {
             </div>
             <div className="weather-info">
               <h3>UV Radiation</h3>
-              <Suspense fallback={<LoadingAnimation />}>
+              <Suspense fallback={<LoadingAnimation progress={progress}/>}>
                 <Chart.ScatterChartComponent
                   data={weather.map((day: any) => ({
                     day: new Date(day.time).getDate(),
