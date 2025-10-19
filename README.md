@@ -44,7 +44,7 @@ git switch develop
 
 ### 2. Creating .env file
 
-- Create a `.env` file **inside the backend directory** and add your [Tomorrow.io API key](https://app.tomorrow.io/development/keys):
+- Create a **.env** file **inside the backend directory** and add your [Tomorrow.io API key](https://app.tomorrow.io/development/keys):
     ```
     TOMORROW_API_KEY=your_api_key_here
     ```
@@ -68,7 +68,7 @@ docker-compose up --build
 This will start:
 
 . Backend on [http://localhost:8000](http://localhost:8000)
-. Frontend on [http://localhost:3000](http://localhost:3000)
+. Frontend on [http://localhost:3000](http://localhost:3000) 
 
 ##### 2. Stop the Containers
 
@@ -138,9 +138,24 @@ Here is a screenshot where the user's asked city was not found.
 
 ![Error Screenshot](./frontend/public/cityNotFound.png)
 
+## Unit Tests
+
+This project also includes unitary tests in **frontend/src/tests** directory. In order to them, run the following commands:
+
+```sh
+cd frontend
+npm run test
+```
+
+## CI/CD
+This project is operating in constant **integration** and **deployment**. Every time a **commit** is pushed in several diferent branches, the GitHub workflow is executed. This workflow runs 4 jobs: **install-in-cache-and-audit**, **test-frontend**, **build-app**, **deploy**
+
 ## Project Structure
 
 ```
+.github/
+    workflows/
+        action.yml
 backend/
     app.js
     package.json
