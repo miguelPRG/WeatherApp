@@ -27,70 +27,40 @@ Frontend built with **React**, **Vite**, **TailwindCSS**, and **Recharts**. Back
 
 ## 🧑‍💻 Getting Started
 
-### Creating .env file
-
-- Create a `.env` file and add your [Tomorrow.io API key](https://app.tomorrow.io/development/keys):
-    ```
-    TOMORROW_API_KEY=your_api_key_here
-    ```
-### Option 1: Using Docker (Development Only)
-
-#### 🐳 Docker (Development Only)
-
-This project includes Docker configuration to simplify **development setup**.  
-It allows you to run both frontend and backend in isolated containers without installing Node.js or npm locally for each part.  
-
-### Option 2: Local Setup (Node.js & npm)
-
-#### Prerequisites
-
-- [Node.js](https://nodejs.org/) (v22+ recommended)
-- [npm](https://www.npmjs.com/)
-
-#### 1. Clone the Repository
+### 1. Clone the repository
 
 ```sh
 git clone https://github.com/miguelPRG/WeatherApp.git
 cd WeatherApp
 ```
 
-#### 2. Setup the Backend
+### 2. Go to develop branch
 
-1. Go to the backend folder:
-    ```sh
-    cd backend
-    ```
-2. Install dependencies:
-    ```sh
-    npm install
-    ```
-3. Start the backend server:
-    ```sh
-    npm run server
-    ```
-    The backend will run on [http://localhost:8000](http://localhost:8000)
+Switch to the **develop** branch for local frontend-backend communication, as it points to the correct backend URL.
 
-#### 3. Setup the Frontend
+```sh
+git switch develop
+```
 
-1. Open a new terminal and go to the frontend folder:
-    ```sh
-    cd frontend
+### 2. Creating .env file
+
+- Create a `.env` file **inside the backend directory** and add your [Tomorrow.io API key](https://app.tomorrow.io/development/keys):
     ```
-2. Install dependencies:
-    ```sh
-    npm install
+    TOMORROW_API_KEY=your_api_key_here
     ```
-3. Start the development server:
-    ```sh
-    npm run dev
-    ```
-    The frontend will run on [http://localhost:3000](http://localhost:3000)
 
-> ⚠️ Note: Docker is configured **for development purposes only**, not for production deployment. For production, you would need to build the frontend and deploy containers to a server or a cloud service. This project runs in [Render](https://render.com/)(backend) and [Vercel](https://vercel.com/)(frontend)
+### Option 1: Using Docker
 
-#### 1. Start the App with Docker
+#### 🐳 Docker (Development Only)
 
-From the project root, run:
+This project includes Docker configuration to simplify **development setup**.  
+It allows you to run both frontend and backend in isolated containers without installing Node.js or npm locally for each part.
+
+> ⚠️ Note: Docker is configured **for development purposes only**, not for production deployment. For production, you would need to build the frontend and backend separately and deploy each one to a server or a cloud service. This project runs in [Render](https://render.com/)(backend) and [Vercel](https://vercel.com/)(frontend).  
+
+##### 1. Start the App with Docker
+
+From the project root, run (as administrator):
 
 ```sh
 docker-compose up --build
@@ -100,11 +70,52 @@ This will start:
 . Backend on [http://localhost:8000](http://localhost:8000)
 . Frontend on [http://localhost:3000](http://localhost:3000)
 
-#### 2. Stop the Containers
+##### 2. Stop the Containers
+
+We can also stop the container to shutdown the application as a whole.
 
 ```sh
 docker-compose down
 ```
+
+### Option 2: Local Setup (Node.js & npm)
+
+#### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v22+ recommended)
+- [npm](https://www.npmjs.com/)
+
+#### 1. Setup the Backend
+
+1. Go to the backend folder:
+```sh
+    cd backend
+```
+2. Install dependencies:
+```sh
+    npm install
+```
+3. Start the backend server:
+```sh
+    npm run server
+```
+    The backend will run on [http://localhost:8000](http://localhost:8000)
+
+#### 3. Setup the Frontend
+
+1. Open a new terminal and go to the frontend folder:
+```sh
+    cd frontend
+```
+2. Install dependencies:
+```sh
+    npm install
+```
+3. Start the development server:
+```sh
+    npm run dev
+```
+    The frontend will run on [http://localhost:3000](http://localhost:3000)
 
 ## Usage
 
@@ -113,17 +124,17 @@ docker-compose down
 - Data is cached in local storage to reduce API calls.
 - Explore charts for temperature, humidity, wind speed, cloud cover, evapotranspiration, and UV index.
 
-## Error Handeling
+## Error Handling
 
 ### Location Not Found
 
-Here is a screenshot where the user's current location is not correctly fetched, wether if it's because the user's browser has not location permissions or some other problem
+Here is a screenshot where the user's current location is not correctly fetched, weather if it's because the user's browser has not location permissions or some other problem.
 
 ![Error Screenshot](./frontend/public/locationNotFound.png)
 
 ### City Not Found
 
-Here is a screenshot where the user's asked city was not found
+Here is a screenshot where the user's asked city was not found.
 
 ![Error Screenshot](./frontend/public/cityNotFound.png)
 
@@ -156,10 +167,6 @@ LICENSE
 README.md
 ```
 
-## License
+## Author
 
-This project is for portfolio and educational purposes.
-
----
-
-Made by [Miguel Gonçalves](https://www.linkedin.com/in/miguel-gon%C3%A7alves-087195169/)
+Made by [Miguel Gonçalves](https://www.linkedin.com/in/miguel-gon%C3%A7alves-087195169/).
