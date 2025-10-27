@@ -54,7 +54,7 @@ function Footer() {
         <span className="font-bold underline hover:text-black">
           {" "}
           <a
-            href="https://www.linkedin.com/in/miguel-gon%C3%A7alves-087195169/"
+            href="https://www.linkedin.com/in/miguel-prg/"
             rel="external nofollow"
             target="_blank"
           >
@@ -67,3 +67,4 @@ function Footer() {
 }
 
 export default Footer;
+
