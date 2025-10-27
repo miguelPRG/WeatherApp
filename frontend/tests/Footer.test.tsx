@@ -23,7 +23,7 @@ describe("Footer component", () => {
     const link = screen.getByRole("link", { name: /Miguel Gonçalves/i });
     expect(link).toHaveProperty(
       "href",
-      "https://www.linkedin.com/in/miguel-gon%C3%A7alves-087195169/",
+      "https://www.linkedin.com/in/miguel-prg/",
     );
     expect(link).toHaveProperty("target", "_blank");
     expect(link).toHaveProperty("rel", "external nofollow");
@@ -40,3 +40,4 @@ describe("Footer component", () => {
     });
   });
 });
+
