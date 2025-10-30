@@ -99,7 +99,9 @@ export const WeatherProvider = ({ children }: { children: any }) => {
       setIsFetching(true);
 
       const res = await fetch(
+        // For testing perpuses, you need to change the url to: `http://localhost:8000/weather?location=${encodeURIComponent(search)}`
         `https://weatherapp-kk01.onrender.com/weather?location=${encodeURIComponent(search)}`
+
       );
       const data = await res.json();
 
